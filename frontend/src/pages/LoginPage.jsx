@@ -37,6 +37,26 @@ function LoginPage() {
     }
   };
 
+  const handleDemoLogin = async (role) => {
+    setLoading(true);
+    setError('');
+    let demoCredentials = { email: 'admin@college.edu', password: 'password123' };
+    if (role === 'ALUMNI') demoCredentials = { email: 'rahul@example.com', password: 'password123' };
+    if (role === 'STUDENT') demoCredentials = { email: 'arjun@student.edu', password: 'password123' };
+
+    try {
+      const data = await authAPI.login(demoCredentials);
+      login(data);
+      if (data.role === 'ADMIN') navigate('/admin/dashboard');
+      else if (data.role === 'ALUMNI') navigate('/alumni/dashboard');
+      else navigate('/student/dashboard');
+    } catch (err) {
+      setError(err.message || 'Login failed.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="auth-page">
       {/* Left Branding Panel */}
@@ -63,11 +83,29 @@ function LoginPage() {
           <div className="auth-form-header">
             <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>🔑</div>
             <h2>Sign In</h2>
-            <p>Enter your credentials to access your dashboard</p>
+            <p>Enter your credentials or use 1-click demo login</p>
           </div>
 
           <div className="auth-form">
             {error && <div className="alert alert-error">❌ {error}</div>}
+
+            {/* Quick 1-Click Demo Login for recruiters / visitors */}
+            <div style={{ marginBottom: '1.25rem', padding: '0.875rem', background: 'var(--bg-main)', borderRadius: 'var(--radius)', border: '1px solid var(--border)' }}>
+              <p style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--primary)', marginBottom: '0.5rem', textAlign: 'center', letterSpacing: '0.5px' }}>
+                ⚡ 1-CLICK DEMO ACCESS
+              </p>
+              <div style={{ display: 'flex', gap: '0.5rem' }}>
+                <button type="button" onClick={() => handleDemoLogin('ADMIN')} className="btn btn-secondary btn-sm" style={{ flex: 1, justifyContent: 'center', fontSize: '0.75rem' }} disabled={loading}>
+                  👑 Admin
+                </button>
+                <button type="button" onClick={() => handleDemoLogin('ALUMNI')} className="btn btn-secondary btn-sm" style={{ flex: 1, justifyContent: 'center', fontSize: '0.75rem' }} disabled={loading}>
+                  🎓 Alumni
+                </button>
+                <button type="button" onClick={() => handleDemoLogin('STUDENT')} className="btn btn-secondary btn-sm" style={{ flex: 1, justifyContent: 'center', fontSize: '0.75rem' }} disabled={loading}>
+                  📚 Student
+                </button>
+              </div>
+            </div>
 
             <form onSubmit={handleSubmit}>
               <div className="form-group">
@@ -106,16 +144,11 @@ function LoginPage() {
               </button>
             </form>
 
-            <div style={{ textAlign: 'center', marginTop: '1.5rem', paddingTop: '1.5rem', borderTop: '1px solid var(--border)' }}>
+            <div style={{ textAlign: 'center', marginTop: '1.25rem', paddingTop: '1.25rem', borderTop: '1px solid var(--border)' }}>
               <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
                 Don't have an account?{' '}
                 <Link to="/register" style={{ fontWeight: 700 }}>Create one →</Link>
               </p>
-            </div>
-
-            <div style={{ marginTop: '1.5rem', padding: '1rem', background: 'var(--bg-main)', borderRadius: 'var(--radius)', border: '1px solid var(--border)' }}>
-              <p style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>DEMO ACCOUNTS</p>
-              <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>Register a new account to get started. Choose ALUMNI or STUDENT role.</p>
             </div>
           </div>
 
