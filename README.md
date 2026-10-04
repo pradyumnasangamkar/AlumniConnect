@@ -7,6 +7,9 @@
 ![React](https://img.shields.io/badge/React-18-blue?logo=react)
 ![MySQL](https://img.shields.io/badge/MySQL-8-blue?logo=mysql)
 ![Maven](https://img.shields.io/badge/Maven-3.9-red?logo=apachemaven)
+[![Live Demo](https://img.shields.io/badge/🌐_Live_Demo-Click_Here-2563eb?style=for-the-badge&logoColor=white)](https://pradyumnasangamkar.github.io/AlumniConnect/)
+
+🔗 **Live Website:** [https://pradyumnasangamkar.github.io/AlumniConnect/](https://pradyumnasangamkar.github.io/AlumniConnect/)
 
 ---
 
