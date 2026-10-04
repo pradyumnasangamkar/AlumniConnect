@@ -364,8 +364,7 @@ AlumniConnect/
 │               └── Announcements.jsx
 │
 ├── .gitignore
-├── README.md
-└── INTERVIEW_GUIDE.md
+└── README.md
 ```
 
 ---
