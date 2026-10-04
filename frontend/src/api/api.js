@@ -50,21 +50,29 @@ let mockAnnouncements = [
   { id: 3, title: 'Campus Recruitment Drive – Autumn 2025', content: 'Top tier recruiters including TCS, Infosys, and Capgemini will be conducting campus drives. Keep your resumes updated and check the jobs section regularly.', category: 'JOB', createdAt: '2025-10-03T09:15:00', createdByName: 'Admin' }
 ];
 
+// Detect if running on a static host (like GitHub Pages or Vercel) without a live backend configured
+const isStaticHost = typeof window !== 'undefined' && 
+  (window.location.hostname.includes('github.io') || window.location.hostname.includes('vercel.app')) &&
+  !import.meta.env.VITE_API_URL;
+
 // Helper: Safely executes an API call with graceful demo fallback
 async function fetchWithFallback(url, options, fallbackFn) {
+  // On static hosts without a backend, return demo data directly
+  // This avoids doomed network calls that return HTTP 405 from static web servers
+  if (isStaticHost) {
+    await new Promise(resolve => setTimeout(resolve, 150));
+    return fallbackFn();
+  }
+
   try {
     const response = await fetch(url, options);
     if (!response.ok) {
-      // If 404, 405 (method not allowed on static host) or server error, use fallback
-      if (response.status === 404 || response.status === 405 || response.status >= 500) {
-        return fallbackFn();
-      }
-      const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.message || `HTTP Error: ${response.status}`);
+      // If server returns error (404, 405, 500), gracefully fallback to demo data
+      return fallbackFn();
     }
     return await response.json();
   } catch (err) {
-    // If network error (backend not running), use demo fallback
+    // If backend is unreachable (offline/network error), gracefully fallback
     return fallbackFn();
   }
 }
