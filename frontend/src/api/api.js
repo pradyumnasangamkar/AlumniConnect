@@ -11,8 +11,10 @@
  */
 
 // Base URL for the Spring Boot backend
-// In development, Vite proxies /api calls to http://localhost:8080
-const BASE_URL = '/api';
+// In production, reads VITE_API_URL if set; otherwise defaults to /api
+const BASE_URL = import.meta.env.VITE_API_URL 
+  ? `${import.meta.env.VITE_API_URL.replace(/\/+$/, '')}/api` 
+  : '/api';
 
 // Helper function to handle fetch responses consistently
 async function handleResponse(response) {
